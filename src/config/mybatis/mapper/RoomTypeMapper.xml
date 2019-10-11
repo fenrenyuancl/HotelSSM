@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bbu.cl.dao.RoomTypeDao">
+	<!-- 房型插入操作 -->
+	<insert id="add" parameterType="RoomType">
+		insert into room_type(id,name,price,liveNum,bedNum,roomNum,avilableNum,bookNum,livedNum,status,photo,remark)
+		 values(null,#{name},#{price},#{liveNum},#{bedNum},#{roomNum},#{avilableNum},#{bookNum},#{livedNum},#{status},#{photo},#{remark})
+	</insert>
+	<!-- 房型修改操作 -->
+	<update id="edit" parameterType="RoomType">
+		update room_type set name = #{name},price = #{price},liveNum = #{liveNum},bedNum = #{bedNum},
+		roomNum = #{roomNum},avilableNum = #{avilableNum},status = #{status},photo = #{photo},remark = #{remark}  where id = #{id}
+	</update>
+	<!-- 房型预定数量编辑操作 -->
+	<update id="updateNum" parameterType="RoomType">
+		update room_type set avilableNum = #{avilableNum},bookNum = #{bookNum},livedNum = #{livedNum} where id = #{id}
+	</update>
+	<!-- 房型信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="RoomType">
+		select * from room_type where 1 = 1  
+		<if test="name != null">
+			and name like '%${name}%' 
+		</if>
+		<if test="status != null">
+			and status like #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 获取所有房型信息 -->
+	<select id="findAll" parameterType="Map" resultType="RoomType">
+		select * from room_type 
+	</select>
+	<!-- 获取单个房型信息 -->
+	<select id="find" parameterType="Long" resultType="RoomType">
+		select * from room_type where id = #{value}
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from room_type where 1 = 1 
+		<if test="name != null">
+			and name like '%${name}%' 
+		</if>
+		<if test="status != null">
+			and status like #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 删除房型信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from room_type where id = ${value}
+	</delete>
+</mapper>

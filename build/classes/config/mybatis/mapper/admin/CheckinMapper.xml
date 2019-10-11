@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bbu.cl.dao.admin.CheckinDao">
+	<!-- 入住信息插入操作 -->
+	<insert id="add" parameterType="Checkin">
+		insert into checkin(id,roomTypeId,roomId,bookOrderId,name,checkinPrice,idCard,phoneNum,createTime,arriveDate,leaveDate,status,remark)
+		 values(null,#{roomTypeId},#{roomId},#{bookOrderId},#{name},#{checkinPrice},#{idCard},#{phoneNum},#{createTime},#{arriveDate},#{leaveDate},#{status},#{remark})
+	</insert>
+	<!-- 入住信息修改操作 -->
+	<update id="edit" parameterType="Checkin">
+		update checkin set roomTypeId = #{roomTypeId}, roomId = #{roomId},bookOrderId = #{bookOrderId},name = #{name},checkinPrice = #{checkinPrice},
+			idCard = #{idCard},phoneNum = #{phoneNum},arriveDate = #{arriveDate}, leaveDate = #{leaveDate},status = #{status},
+			remark = #{remark} where id = #{id}
+	</update>
+	<!-- 入住信息信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="Checkin">
+		select * from checkin where 1 = 1  
+		<if test="roomTypeId != null">
+			and  roomTypeId = #{roomTypeId} 
+		</if>
+		<if test="roomId != null">
+			and  roomId = #{roomId} 
+		</if>
+		<if test="name != null">
+			and name like '%${name}%' 
+		</if>
+		<if test="idCard != null">
+			and idCard like '%${idCard}%' 
+		</if>
+		<if test="phoneNum != null">
+			and phoneNum like '%${phoneNum}%' 
+		</if>
+		<if test="status != null">
+			and status like #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 获取单个入住信息 -->
+	<select id="find" parameterType="Long" resultType="Checkin">
+		select * from checkin where id = #{value}
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from checkin where 1 = 1 
+		<if test="roomTypeId != null">
+			and  roomTypeId = #{roomTypeId} 
+		</if>
+		<if test="roomId != null">
+			and  roomId = #{roomId} 
+		</if>
+		<if test="name != null">
+			and name like '%${name}%' 
+		</if>
+		<if test="idCard != null">
+			and idCard like '%${idCard}%' 
+		</if>
+		<if test="phoneNum != null">
+			and phoneNum like '%${phoneNum}%' 
+		</if>
+		<if test="status != null">
+			and status like #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 删除入住信息 -->
+	<delete id="delete" parameterType="String">
+		delete from checkin where id in(${value})
+	</delete>
+	<!-- 按月获取统计信息 -->
+	<select id="getStatsByMonth"  resultType="Map">
+		select sum(checkinPrice) as money,DATE_FORMAT(createTime,'%Y-%m') as stats_date from checkin GROUP BY DATE_FORMAT(createTime,'%Y-%m')
+	</select>
+	<!-- 按日获取统计信息  -->
+	<select id="getStatsByDay" resultType="Map">
+		select sum(checkinPrice) as money,DATE_FORMAT(createTime,'%Y-%m-%d') as stats_date from checkin GROUP BY DATE_FORMAT(createTime,'%Y-%m-%d')
+	</select>
+</mapper>

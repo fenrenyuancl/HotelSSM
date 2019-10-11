@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bbu.cl.dao.AccountDao">
+	<!-- 客户插入操作 -->
+	<insert id="add" parameterType="Account">
+		insert into account(id,username,password,name,idCard,phoneNum,address,status)
+		 values(null,#{username},#{password},#{name},#{idCard},#{phoneNum},#{address},#{status})
+	</insert>
+	<!-- 客户修改操作 -->
+	<update id="edit" parameterType="Account">
+		update account set username = #{username}, password = #{password},name = #{name},
+			idCard = #{idCard},phoneNum = #{phoneNum},address = #{address},status = #{status} where id = #{id}
+	</update>
+	<!-- 客户信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="Account">
+		select * from account where 1 = 1  
+		<if test="username != null">
+			and  username like '%${username}%' 
+		</if>
+		<if test="name != null">
+			and name like '%${name}%' 
+		</if>
+		<if test="idCard != null">
+			and idCard like '%${idCard}%' 
+		</if>
+		<if test="phoneNum != null">
+			and phoneNum like '%${phoneNum}%' 
+		</if>
+		<if test="status != null">
+			and status like #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 获取单个客户信息 -->
+	<select id="find" parameterType="Long" resultType="Account">
+		select * from account where id = #{value}
+	</select>
+	<!-- 根据用户名获取单个客户信息 -->
+	<select id="findByUsername" parameterType="String" resultType="Account">
+		select * from account where username = #{value}
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from account where 1 = 1 
+		<if test="username != null">
+			and username like '%${username}%' 
+		</if>
+		<if test="name != null">
+			and name like '%${name}%' 
+		</if>
+		<if test="idCard != null">
+			and idCard like '%${idCard}%' 
+		</if>
+		<if test="phoneNum != null">
+			and phoneNum like '%${phoneNum}%' 
+		</if>
+		<if test="status != null">
+			and status like #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 删除客户信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from account where id = ${value}
+	</delete>
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bbu.cl.dao.BookOrderDao">
+	<!-- 预定订单插入操作 -->
+	<insert id="add" parameterType="BookOrder">
+		insert into book_order(id,accountId,roomTypeId,name,idCard,phoneNum,createTime,arriveDate,leaveDate,status,remark)
+		 values(null,#{accountId},#{roomTypeId},#{name},#{idCard},#{phoneNum},#{createTime},#{arriveDate},#{leaveDate},#{status},#{remark})
+	</insert>
+	<!-- 预定订单修改操作 -->
+	<update id="edit" parameterType="BookOrder">
+		update book_order set accountId = #{accountId}, roomTypeId = #{roomTypeId},name = #{name},
+			idCard = #{idCard},phoneNum = #{phoneNum},arriveDate = #{arriveDate},
+			leaveDate = #{leaveDate},status = #{status},remark = #{remark} where id = #{id}
+	</update>
+	<!-- 预定订单信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="BookOrder">
+		select * from book_order where 1 = 1  
+		<if test="accountId != null">
+			and  accountId = #{accountId} 
+		</if>
+		<if test="roomTypeId != null">
+			and  roomTypeId = #{roomTypeId} 
+		</if>
+		<if test="name != null">
+			and name like '%${name}%' 
+		</if>
+		<if test="idCard != null">
+			and idCard like '%${idCard}%' 
+		</if>
+		<if test="phoneNum != null">
+			and phoneNum like '%${phoneNum}%' 
+		</if>
+		<if test="status != null">
+			and status like #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 获取单个预定订单信息 -->
+	<select id="find" parameterType="Long" resultType="BookOrder">
+		select * from book_order where id = #{value}
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from book_order where 1 = 1 
+		<if test="accountId != null">
+			and  accountId = #{accountId} 
+		</if>
+		<if test="roomTypeId != null">
+			and  roomTypeId = #{roomTypeId} 
+		</if>
+		<if test="name != null">
+			and name like '%${name}%' 
+		</if>
+		<if test="idCard != null">
+			and idCard like '%${idCard}%' 
+		</if>
+		<if test="phoneNum != null">
+			and phoneNum like '%${phoneNum}%' 
+		</if>
+		<if test="status != null">
+			and status like #{status} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 删除预定订单（只有当在入住页面导入预定订单入住时才会删除） -->
+	<delete id="delete" parameterType="Long">
+		delete from book_order where id = ${value}
+	</delete>
+</mapper>
